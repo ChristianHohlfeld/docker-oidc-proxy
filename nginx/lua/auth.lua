@@ -1,5 +1,5 @@
 local opts = {
-    redirect_uri_path = os.getenv("OID_REDIRECT_PATH") or "/redirect_uri",
+    redirect_uri = os.getenv("OID_REDIRECT_PATH") or "/redirect_uri",
     discovery = os.getenv("OID_DISCOVERY"),
     client_id = os.getenv("OID_CLIENT_ID"),
     client_secret = os.getenv("OID_CLIENT_SECRET"),
@@ -7,9 +7,11 @@ local opts = {
     renew_access_token_on_expiry = os.getenv("OIDC_RENEW_ACCESS_TOKEN_ON_EXPIERY") ~= "false",
     scope = os.getenv("OIDC_AUTH_SCOPE") or "openid",
     iat_slack = 600,
+    use_pkce = os.getenv("OIDC_USE_PKCE") == "true"
 }
 
 -- call authenticate for OpenID Connect user authentication
+ngx.log(ngx.INFO, "Calling resty.openidc")
 local res, err, _target, session = require("resty.openidc").authenticate(opts)
 
 ngx.log(ngx.INFO, tostring(res))
